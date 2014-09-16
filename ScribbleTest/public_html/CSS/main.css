@@ -1,10 +1,26 @@
 /*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
-    Created on : 15-Sep-2014, 11:18:28 PM
-    Author     : Juice
+Page: Login
+Notes:For user to log into server
 */
 
+#loginContainer
+{
+    background-color: red;
+    height: 300px;
+    width: 250px;
+    border: black;
+    border-style: solid;
+    border-width: thick;
+}
+#loginContainer h1 
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px;
+}
+#loginContainer form
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 150px;
+}
