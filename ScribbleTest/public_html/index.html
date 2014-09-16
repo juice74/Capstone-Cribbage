@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Scribble Tutorial</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script language="javascript">
+            var HEIGHT = 400;
+            var WIDTH = 400;
+            
+            var websocketHandle = false;
+            var canvasHandle = false;
+            var bufferHandle = false;
+            var bufferImage = false;
+            var lastTime = false;
+            
+            var square = {
+              x: 10,
+              y: 10,
+              width: 50,
+              height: 50,
+              color: "rgb(0,0,255)"
+            };
+            
+            var update = function ( dt ) {
+                square.y += dt/1000*10;
+            };
+            
+            var draw = function () {
+                
+                // clear the buffer
+                bufferHandle.fillStyle = "rgb(255,255,255)";
+                bufferHandle.beginPath();
+                bufferHandle.rect(0,0,WIDTH,HEIGHT);
+                bufferHandle.fill();
+                
+                // draw objects
+                bufferHandle.fillStyle = square.color;
+                bufferHandle.beginPath();                
+                bufferHandle.rect(square.x, square.y, square.width, square.height);
+                bufferHandle.fill();
+                // double buffer
+                bufferImage = bufferHandle.getImageData(0,0,WIDTH,HEIGHT);
+                canvasHandle.putImageData(bufferImage,0,0);
+            };
+            
+            var gameLoop = function () {
+                currentTime = new Date();
+                elapsedTime = currentTime.getTime() - lastTime.getTime();
+                update( elapsedTime );
+                draw();              
+                
+                lastTime = currentTime;
+            };
+            
+            $(document).ready( function(){
+               websocketHandle = new WebSocket("ws://scribblehost.ws:1035/juice74229673");
+               
+               websocketHandle.onopen = function () {
+                   alert('Connected!');
+               };
+               
+               websocketHandle.onclose = function () {
+                   alert('Disconnected');
+               };
+               
+               websocketHandle.onmessage = function ( msg ) {
+                   
+               };
+               
+               websocketHandle.onerror = function ( error ){
+                   
+               };
+               
+               //create canvas element of same dimenstions as canvasHandle
+               bufferHandle = document.createElement('canvas');
+               bufferHandle.width = WIDTH;
+               bufferHandle.height = HEIGHT;
+               bufferHandle = bufferHandle.getContext('2d');          
+               
+               canvasHandle = document.getElementById('game');
+               canvasHandle = canvasHandle.getContext('2d');
+               
+               lastTime = new Date();
+               
+               setInterval ( function () {
+                  gameLoop (); 
+               }, 70);
+               
+            });
+        </script>
+    
+    </head>
+    
+    <body>
+        <canvas id="game" width="400" height="600">HTML5 is not supported.</canvas>
+    </body>
+</html>
